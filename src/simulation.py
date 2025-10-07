@@ -124,12 +124,10 @@ class Simulation:
                         projectile.paused = True
                     
         elif action == 'reset':
-            # Remettre le projectile sélectionné à zéro
-            if self.ui.selected_projectile:
-                self.ui.selected_projectile.reset()
-                # Si c'était le seul projectile lancé, arrêter la simulation
-                if not any(p.launched for p in self.projectiles):
-                    self.ui.simulation_running = False
+            # Remettre tous les projectiles à zéro
+            for projectile in self.projectiles:
+                projectile.reset()
+            self.ui.simulation_running = False
                 
         elif action == 'clear_all':
             # Effacer tous les projectiles
@@ -145,7 +143,7 @@ class Simulation:
                 v0=params['v0'],
                 angle=params['angle'],
                 mass=params['mass'],
-                drag_coefficient=params['drag_coefficient']
+                radius=params['radius']
             )
         
         # Mettre à jour l'état du bouton lancer/pause

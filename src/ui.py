@@ -58,6 +58,29 @@ class Slider:
         label_text = self.font.render(f"{self.label}: {self.val:.1f}", True, BLACK)
         screen.blit(label_text, (self.rect.x, self.rect.y - 25))
 
+class RadiusSlider(Slider):
+    """Slider spécialisé pour le rayon qui affiche en cm mais retourne en mètres."""
+    def __init__(self, x, y, width, height, min_cm, max_cm, initial_cm, label):
+        # Convertir cm en m pour le stockage interne
+        super().__init__(x, y, width, height, min_cm, max_cm, initial_cm, label)
+    
+    def draw(self, screen):
+        # Dessiner la barre du slider
+        pygame.draw.rect(screen, (200, 200, 200), self.rect)
+        pygame.draw.rect(screen, BLACK, self.rect, 2)
+        
+        # Dessiner le handle
+        pygame.draw.circle(screen, BLUE, (int(self.handle_x), self.rect.centery), self.handle_radius)
+        pygame.draw.circle(screen, BLACK, (int(self.handle_x), self.rect.centery), self.handle_radius, 2)
+        
+        # Dessiner le label et la valeur en cm
+        label_text = self.font.render(f"{self.label}: {self.val:.1f}", True, BLACK)
+        screen.blit(label_text, (self.rect.x, self.rect.y - 25))
+    
+    def get_value_in_meters(self):
+        """Retourne la valeur en mètres."""
+        return self.val / 100.0
+
 class Button:
     def __init__(self, x, y, width, height, text, color=(200, 200, 200)):
         self.rect = pygame.Rect(x, y, width, height)
@@ -84,17 +107,17 @@ class Button:
 class UI:
     def __init__(self):
         self.sliders = {
-            'velocity': Slider(50, 80, 200, 20, 10, 200, 80, "Vitesse (m/s)"),
-            'angle': Slider(50, 130, 200, 20, 0, 90, 45, "Angle (°)"),
-            'mass': Slider(50, 180, 200, 20, 0.1, 10, 1.0, "Masse (kg)"),
-            'drag': Slider(50, 230, 200, 20, 0.0, 2.0, 0.0, "Traînée")
+            'velocity': Slider(50, 105, 200, 20, 0, 1000, 80, "Vitesse (m/s)"),
+            'angle': Slider(50, 165, 200, 20, 0, 360, 45, "Angle (°)"),
+            'mass': Slider(50, 225, 200, 20, 0.001, 1000, 1.0, "Masse (kg)"),
+            'radius': RadiusSlider(50, 285, 200, 20, 0.0, 100.0, 10.0, "Rayon (cm)")
         }
         
         self.buttons = {
-            'add_projectile': Button(50, 280, 80, 25, "Ajouter"),
-            'launch_pause': Button(140, 280, 80, 25, "Lancer"),
-            'reset': Button(50, 315, 80, 25, "Reset"),
-            'clear_all': Button(140, 315, 80, 25, "Effacer")
+            'add_projectile': Button(50, 335, 80, 25, "Ajouter"),
+            'launch_pause': Button(140, 335, 80, 25, "Lancer"),
+            'reset': Button(50, 370, 80, 25, "Reset"),
+            'clear_all': Button(140, 370, 80, 25, "Effacer")
         }
         
         # État de la simulation
@@ -117,8 +140,11 @@ class UI:
             self.sliders['mass'].val = projectile.mass
             self.sliders['mass'].handle_x = self.sliders['mass']._value_to_x(projectile.mass)
             
-            self.sliders['drag'].val = projectile.drag_coefficient
-            self.sliders['drag'].handle_x = self.sliders['drag']._value_to_x(projectile.drag_coefficient)
+            # Convertir le rayon en cm et limiter à la plage du slider
+            radius_cm = projectile.radius * 100.0
+            radius_cm = max(self.sliders['radius'].min_val, min(self.sliders['radius'].max_val, radius_cm))
+            self.sliders['radius'].val = radius_cm
+            self.sliders['radius'].handle_x = self.sliders['radius']._value_to_x(radius_cm)
     
     def update_launch_pause_button(self, has_projectiles, any_launched):
         """Met à jour le texte du bouton lancer/pause selon l'état de la simulation."""
@@ -148,7 +174,7 @@ class UI:
     
     def draw(self, screen):
         # Dessiner un panneau de contrôle (ajusté)
-        panel_rect = pygame.Rect(20, 20, 280, 370)
+        panel_rect = pygame.Rect(20, 20, 280, 400)
         pygame.draw.rect(screen, (240, 240, 240), panel_rect)
         pygame.draw.rect(screen, BLACK, panel_rect, 2)
         
@@ -188,12 +214,12 @@ class UI:
             'v0': self.sliders['velocity'].val,
             'angle': self.sliders['angle'].val,
             'mass': self.sliders['mass'].val,
-            'drag_coefficient': self.sliders['drag'].val
+            'radius': self.sliders['radius'].get_value_in_meters()
         }
     
     def draw_info(self, screen, projectiles):
         """Affiche des informations sur les projectiles."""
-        info_y = 410
+        info_y = 450
         
         if self.selected_projectile and self.selected_projectile in projectiles:
             proj = self.selected_projectile

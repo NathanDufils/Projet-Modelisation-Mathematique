@@ -1,12 +1,15 @@
 import math
-from src.settings import GRAVITY
+from src.settings import GRAVITY, AIR_DENSITY, DRAG_COEFFICIENT
 
-def calculate_trajectory_point(x0, y0, v0, angle, t, mass, drag_coefficient):
+def calculate_trajectory_point(x0, y0, v0, angle, t, mass, radius):
     """
     Calcule la position et la vitesse d'un projectile à un temps donné.
-    Utilise l'intégration numérique pour la résistance de l'air si drag_coefficient > 0.
+    Utilise l'intégration numérique avec résistance de l'air si radius > 0.
+    
+    La force de traînée est calculée avec: F_drag = 0.5 * ρ * C_d * A * v²
+    où ρ = densité de l'air, C_d = coefficient de traînée, A = surface frontale
     """
-    if drag_coefficient == 0:
+    if radius == 0:
         # Trajectoire parabolique simple sans résistance de l'air
         x = x0 + v0 * math.cos(angle) * t
         y = y0 - v0 * math.sin(angle) * t + 0.5 * GRAVITY * t**2
@@ -22,13 +25,19 @@ def calculate_trajectory_point(x0, y0, v0, angle, t, mass, drag_coefficient):
         vx = v0 * math.cos(angle)
         vy = -v0 * math.sin(angle)
         
+        # Calcul de la surface frontale (aire d'un cercle)
+        cross_section_area = math.pi * radius**2
+        
+        # Constante de traînée: k = 0.5 * ρ * C_d * A
+        drag_constant = 0.5 * AIR_DENSITY * DRAG_COEFFICIENT * cross_section_area
+        
         current_time = 0
         while current_time < t:
-            # Calculer la force de traînée (F = k * v²)
+            # Calculer la force de traînée: F = k * v²
             speed = math.sqrt(vx**2 + vy**2)
             if speed > 0:
-                # Coefficient de traînée normalisé
-                drag_force = drag_coefficient * speed**2
+                # Force de traînée
+                drag_force = drag_constant * speed**2
                 # Accélération due à la traînée (F = ma, donc a = F/m)
                 drag_ax = -drag_force * (vx / speed) / mass
                 drag_ay = -drag_force * (vy / speed) / mass

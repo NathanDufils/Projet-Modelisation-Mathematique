@@ -4,7 +4,7 @@ from src.settings import *
 from src.physics import calculate_trajectory_point
 
 class Projectile:
-    def __init__(self, x0, y0, v0=50, angle=45, mass=1.0, drag_coefficient=0.0, color=RED):
+    def __init__(self, x0, y0, v0=50, angle=45, mass=1.0, radius=0.1, color=RED):
         # Paramètres initiaux (immuables une fois le tir lancé)
         self.x0 = x0
         self.y0 = y0
@@ -12,7 +12,7 @@ class Projectile:
         self.angle_degrees = angle
         self.angle = math.radians(angle)
         self.mass = mass
-        self.drag_coefficient = drag_coefficient
+        self.radius = radius
         
         # État actuel
         self.x = x0
@@ -28,7 +28,6 @@ class Projectile:
         self.paused = False
         
         # Apparence
-        self.radius = 6
         self.color = color
         self.selected = False
         
@@ -52,7 +51,7 @@ class Projectile:
         
         new_x, new_y, new_vx, new_vy = calculate_trajectory_point(
             self.x0, self.y0, self.v0, self.angle, 
-            self.time, self.mass, self.drag_coefficient
+            self.time, self.mass, self.radius
         )
         
         self.x = new_x
@@ -89,7 +88,7 @@ class Projectile:
             self.y = y
             self.trajectory = [(x, y)]
     
-    def set_parameters(self, v0=None, angle=None, mass=None, drag_coefficient=None):
+    def set_parameters(self, v0=None, angle=None, mass=None, radius=None):
         """Modifie les paramètres du projectile (seulement si pas lancé)."""
         if not self.launched:
             if v0 is not None:
@@ -99,8 +98,8 @@ class Projectile:
                 self.angle = math.radians(angle)
             if mass is not None:
                 self.mass = mass
-            if drag_coefficient is not None:
-                self.drag_coefficient = drag_coefficient
+            if radius is not None:
+                self.radius = radius
                 
             # Recalculer les vitesses initiales
             self.vx = self.v0 * math.cos(self.angle)
@@ -127,13 +126,18 @@ class Projectile:
         # Dessiner le projectile
         if self.active and (SIM_AREA_X <= self.x <= SIM_AREA_X + SIM_AREA_WIDTH and
                            SIM_AREA_Y <= self.y <= SIM_AREA_Y + SIM_AREA_HEIGHT):
+            # Calculer le rayon d'affichage en pixels (rayon physique * échelle * facteur d'agrandissement)
+            display_radius = int(self.radius * SCALE * 10)
+            # Limiter le rayon d'affichage entre 5 et 50 pixels pour la visibilité
+            display_radius = max(5, min(50, display_radius))
+            
             # Couleur différente si sélectionné
             color = GREEN if self.selected else self.color
-            pygame.draw.circle(screen, color, (int(self.x), int(self.y)), self.radius)
+            pygame.draw.circle(screen, color, (int(self.x), int(self.y)), display_radius)
             
             # Bordure si sélectionné
             if self.selected:
-                pygame.draw.circle(screen, BLACK, (int(self.x), int(self.y)), self.radius + 2, 2)
+                pygame.draw.circle(screen, BLACK, (int(self.x), int(self.y)), display_radius + 2, 2)
         
         # Dessiner les indicateurs si pas lancé ou en pause
         if not self.launched or self.paused:
@@ -142,12 +146,11 @@ class Projectile:
     def draw_indicators(self, screen):
         """Dessine les indicateurs d'angle et de vitesse."""
         # Arc pour l'angle
-        if self.angle_degrees > 0:
-            arc_radius = 30
-            pygame.draw.arc(screen, DARK_GRAY,
-                          (self.x - arc_radius, self.y - arc_radius,
-                           arc_radius * 2, arc_radius * 2),
-                          -self.angle, 0, 2)
+        arc_radius = 30
+        pygame.draw.arc(screen, DARK_GRAY,
+                      (self.x - arc_radius, self.y - arc_radius,
+                       arc_radius * 2, arc_radius * 2),
+                      0, self.angle, 2)
         
         # Ligne de référence horizontale
         pygame.draw.line(screen, LIGHT_GRAY,

@@ -1,6 +1,7 @@
 # Paramètres physiques
 GRAVITY = 9.81  # m/s^2
 AIR_DENSITY = 1.225  # kg/m^3 (au niveau de la mer)
+DRAG_COEFFICIENT = 0.47  # Coefficient de traînée pour une sphère
 
 # Fenêtre
 SCREEN_WIDTH = 1200
