@@ -4,10 +4,21 @@ AIR_DENSITY = 1.225  # kg/m^3 (au niveau de la mer)
 DRAG_COEFFICIENT = 0.47  # Coefficient de traînée pour une sphère
 
 # Fenêtre
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 1400
 SCREEN_HEIGHT = 700
 
-# Zone de simulation (exclut le panneau UI)
+# Panneaux de contrôle
+SIMULATION_PANEL_X = 20
+SIMULATION_PANEL_Y = 20
+SIMULATION_PANEL_WIDTH = 280
+SIMULATION_PANEL_HEIGHT = 300
+
+OBJECT_PANEL_X = 20
+OBJECT_PANEL_Y = 340
+OBJECT_PANEL_WIDTH = 280
+OBJECT_PANEL_HEIGHT = 340
+
+# Zone de simulation (exclut les panneaux UI)
 SIM_AREA_X = 320
 SIM_AREA_Y = 20
 SIM_AREA_WIDTH = SCREEN_WIDTH - SIM_AREA_X - 20

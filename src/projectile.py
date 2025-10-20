@@ -42,8 +42,14 @@ class Projectile:
         self.vy = -self.v0 * math.sin(self.angle)
         self.active = True
         
-    def update(self, dt):
-        """Met à jour la position du projectile si il est lancé et pas en pause."""
+    def update(self, dt, gravity=GRAVITY, air_density=AIR_DENSITY):
+        """Met à jour la position du projectile si il est lancé et pas en pause.
+        
+        Args:
+            dt: Pas de temps
+            gravity: Accélération de la pesanteur
+            air_density: Densité de l'air
+        """
         if not self.active or not self.launched or self.paused:
             return
             
@@ -51,7 +57,8 @@ class Projectile:
         
         new_x, new_y, new_vx, new_vy = calculate_trajectory_point(
             self.x0, self.y0, self.v0, self.angle, 
-            self.time, self.mass, self.radius
+            self.time, self.mass, self.radius,
+            gravity, air_density
         )
         
         self.x = new_x

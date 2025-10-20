@@ -19,6 +19,10 @@ class Simulation:
         # Liste des projectiles
         self.projectiles = []
         
+        # Paramètres d'environnement
+        self.gravity = GRAVITY
+        self.air_density = AIR_DENSITY
+        
         # Variables pour le déplacement
         self.dragging = False
         self.drag_offset = (0, 0)
@@ -99,7 +103,7 @@ class Simulation:
     
     def handle_ui_action(self, action):
         """Gère les actions de l'interface utilisateur."""
-        if action == 'add_projectile':
+        if action == 'add_object':
             # Ajouter un nouveau projectile
             new_projectile = Projectile(START_X, START_Y)
             self.projectiles.append(new_projectile)
@@ -124,21 +128,26 @@ class Simulation:
                         projectile.paused = True
                     
         elif action == 'reset':
-            # Remettre tous les projectiles à zéro
+            # Remettre tous les projectiles à leur position initiale
             for projectile in self.projectiles:
                 projectile.reset()
             self.ui.simulation_running = False
                 
-        elif action == 'clear_all':
+        elif action == 'clear':
             # Effacer tous les projectiles
             self.projectiles.clear()
             self.select_projectile(None)
             self.ui.simulation_running = False
     
     def update(self):
+        # Mettre à jour les paramètres d'environnement
+        env_params = self.ui.get_environment_parameters()
+        self.gravity = env_params['gravity']
+        self.air_density = env_params['air_density']
+        
         # Mettre à jour les paramètres du projectile sélectionné
         if self.ui.selected_projectile:
-            params = self.ui.get_parameters()
+            params = self.ui.get_object_parameters()
             self.ui.selected_projectile.set_parameters(
                 v0=params['v0'],
                 angle=params['angle'],
@@ -151,9 +160,9 @@ class Simulation:
         any_launched = any(p.launched for p in self.projectiles)
         self.ui.update_launch_pause_button(has_projectiles, any_launched)
         
-        # Mettre à jour tous les projectiles
+        # Mettre à jour tous les projectiles avec les paramètres d'environnement
         for projectile in self.projectiles:
-            projectile.update(TIME_STEP)
+            projectile.update(TIME_STEP, self.gravity, self.air_density)
             
         # Vérifier si la simulation doit s'arrêter automatiquement
         if self.ui.simulation_running and any_launched:
