@@ -10,6 +10,7 @@ class Slider:
         self.val = initial_val
         self.label = label
         self.dragging = False
+        self.enabled = True  # Nouveau: état d'activation du slider
         
         self.handle_radius = height // 2
         self.handle_x = self._value_to_x(initial_val)
@@ -26,6 +27,9 @@ class Slider:
         return self.min_val + ratio * (self.max_val - self.min_val)
     
     def handle_event(self, event):
+        if not self.enabled:
+            return  # Ignorer tous les événements si le slider est désactivé
+            
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
             handle_rect = pygame.Rect(
@@ -46,16 +50,28 @@ class Slider:
             self.val = self._x_to_value(self.handle_x)
     
     def draw(self, screen):
+        # Couleurs en fonction de l'état
+        if self.enabled:
+            bar_color = (200, 200, 200)
+            handle_color = BLUE
+            border_color = BLACK
+            text_color = BLACK
+        else:
+            bar_color = (230, 230, 230)
+            handle_color = GRAY
+            border_color = LIGHT_GRAY
+            text_color = GRAY
+        
         # Dessiner la barre du slider
-        pygame.draw.rect(screen, (200, 200, 200), self.rect)
-        pygame.draw.rect(screen, BLACK, self.rect, 2)
+        pygame.draw.rect(screen, bar_color, self.rect)
+        pygame.draw.rect(screen, border_color, self.rect, 2)
         
         # Dessiner le handle
-        pygame.draw.circle(screen, BLUE, (int(self.handle_x), self.rect.centery), self.handle_radius)
-        pygame.draw.circle(screen, BLACK, (int(self.handle_x), self.rect.centery), self.handle_radius, 2)
+        pygame.draw.circle(screen, handle_color, (int(self.handle_x), self.rect.centery), self.handle_radius)
+        pygame.draw.circle(screen, border_color, (int(self.handle_x), self.rect.centery), self.handle_radius, 2)
         
         # Dessiner le label et la valeur
-        label_text = self.font.render(f"{self.label}: {self.val:.1f}", True, BLACK)
+        label_text = self.font.render(f"{self.label}: {self.val:.1f}", True, text_color)
         screen.blit(label_text, (self.rect.x, self.rect.y - 25))
 
 class RadiusSlider(Slider):
@@ -65,16 +81,28 @@ class RadiusSlider(Slider):
         super().__init__(x, y, width, height, min_cm, max_cm, initial_cm, label)
     
     def draw(self, screen):
+        # Couleurs en fonction de l'état
+        if self.enabled:
+            bar_color = (200, 200, 200)
+            handle_color = BLUE
+            border_color = BLACK
+            text_color = BLACK
+        else:
+            bar_color = (230, 230, 230)
+            handle_color = GRAY
+            border_color = LIGHT_GRAY
+            text_color = GRAY
+        
         # Dessiner la barre du slider
-        pygame.draw.rect(screen, (200, 200, 200), self.rect)
-        pygame.draw.rect(screen, BLACK, self.rect, 2)
+        pygame.draw.rect(screen, bar_color, self.rect)
+        pygame.draw.rect(screen, border_color, self.rect, 2)
         
         # Dessiner le handle
-        pygame.draw.circle(screen, BLUE, (int(self.handle_x), self.rect.centery), self.handle_radius)
-        pygame.draw.circle(screen, BLACK, (int(self.handle_x), self.rect.centery), self.handle_radius, 2)
+        pygame.draw.circle(screen, handle_color, (int(self.handle_x), self.rect.centery), self.handle_radius)
+        pygame.draw.circle(screen, border_color, (int(self.handle_x), self.rect.centery), self.handle_radius, 2)
         
         # Dessiner le label et la valeur en cm
-        label_text = self.font.render(f"{self.label}: {self.val:.1f}", True, BLACK)
+        label_text = self.font.render(f"{self.label}: {self.val:.1f}", True, text_color)
         screen.blit(label_text, (self.rect.x, self.rect.y - 25))
     
     def get_value_in_meters(self):
@@ -115,15 +143,17 @@ class SimulationPanel:
         # Sliders pour les paramètres d'environnement
         self.sliders = {
             'gravity': Slider(self.x + 15, self.y + 70, 200, 20, 0.1, 20.0, GRAVITY, "Gravité (m/s²)"),
-            'air_density': Slider(self.x + 15, self.y + 130, 200, 20, 0.0, 2.0, AIR_DENSITY, "Densité air (kg/m³)")
+            'air_density': Slider(self.x + 15, self.y + 130, 200, 20, 0.0, 2.0, AIR_DENSITY, "Densité air (kg/m³)"),
+            'wind_speed': Slider(self.x + 15, self.y + 190, 200, 20, 0.0, 50.0, WIND_SPEED, "Vent vitesse (m/s)"),
+            'wind_direction': Slider(self.x + 15, self.y + 250, 200, 20, 0.0, 360.0, WIND_DIRECTION, "Vent direction (°)")
         }
         
         # Boutons de contrôle de la simulation
         self.buttons = {
-            'add_object': Button(self.x + 15, self.y + 180, 110, 30, "Ajouter"),
-            'launch_pause': Button(self.x + 135, self.y + 180, 110, 30, "Lancer"),
-            'reset': Button(self.x + 15, self.y + 220, 110, 30, "Réinitialiser"),
-            'clear': Button(self.x + 135, self.y + 220, 110, 30, "Effacer")
+            'add_object': Button(self.x + 15, self.y + 300, 110, 30, "Ajouter"),
+            'launch_pause': Button(self.x + 135, self.y + 300, 110, 30, "Lancer"),
+            'reset': Button(self.x + 15, self.y + 340, 110, 30, "Réinitialiser"),
+            'clear': Button(self.x + 135, self.y + 340, 110, 30, "Effacer")
         }
         
         self.font = pygame.font.Font(None, 24)
@@ -151,6 +181,11 @@ class SimulationPanel:
         title = self.title_font.render("Environnement", True, BLACK)
         screen.blit(title, (self.x + 10, self.y + 10))
         
+        # Message si les sliders sont désactivés
+        if not self.sliders['gravity'].enabled:
+            info_text = self.font.render("Verrouillé pendant le vol", True, GRAY)
+            screen.blit(info_text, (self.x + 10, self.y + 40))
+        
         # Sliders
         for slider in self.sliders.values():
             slider.draw(screen)
@@ -163,7 +198,9 @@ class SimulationPanel:
         """Retourne les paramètres d'environnement."""
         return {
             'gravity': self.sliders['gravity'].val,
-            'air_density': self.sliders['air_density'].val
+            'air_density': self.sliders['air_density'].val,
+            'wind_speed': self.sliders['wind_speed'].val,
+            'wind_direction': self.sliders['wind_direction'].val
         }
     
     def update_launch_pause_button(self, has_objects, any_launched):
@@ -175,6 +212,11 @@ class SimulationPanel:
             self.buttons['launch_pause'].text = "Pause"
         else:
             self.buttons['launch_pause'].text = "Lancer"
+    
+    def set_sliders_enabled(self, enabled):
+        """Active ou désactive tous les sliders du panneau."""
+        for slider in self.sliders.values():
+            slider.enabled = enabled
 
 
 class ObjectPanel:
@@ -187,10 +229,10 @@ class ObjectPanel:
         
         # Sliders pour les paramètres de l'objet
         self.sliders = {
-            'velocity': Slider(self.x + 15, self.y + 90, 200, 20, 0, 500, 80, "Vitesse (m/s)"),
-            'angle': Slider(self.x + 15, self.y + 150, 200, 20, 0, 360, 45, "Angle (°)"),
-            'mass': Slider(self.x + 15, self.y + 210, 200, 20, 0.001, 100, 1.0, "Masse (kg)"),
-            'radius': RadiusSlider(self.x + 15, self.y + 270, 200, 20, 1.0, 100.0, 10.0, "Rayon (cm)")
+            'velocity': Slider(self.x + 15, self.y + 70, 200, 20, 0, 500, 80, "Vitesse (m/s)"),
+            'angle': Slider(self.x + 15, self.y + 120, 200, 20, 0, 360, 45, "Angle (°)"),
+            'mass': Slider(self.x + 15, self.y + 170, 200, 20, 0.001, 100, 1.0, "Masse (kg)"),
+            'radius': RadiusSlider(self.x + 15, self.y + 220, 200, 20, 1.0, 100.0, 10.0, "Rayon (cm)")
         }
         
         self.font = pygame.font.Font(None, 24)
@@ -263,6 +305,11 @@ class ObjectPanel:
             'mass': self.sliders['mass'].val,
             'radius': self.sliders['radius'].get_value_in_meters()
         }
+    
+    def set_sliders_enabled(self, enabled):
+        """Active ou désactive tous les sliders du panneau."""
+        for slider in self.sliders.values():
+            slider.enabled = enabled
 
 
 class UI:
@@ -287,6 +334,19 @@ class UI:
         """Met à jour le texte du bouton lancer/pause selon l'état de la simulation."""
         self.simulation_panel.update_launch_pause_button(has_projectiles, any_launched)
         self.simulation_running = self.simulation_panel.simulation_running
+    
+    def lock_parameters(self, lock):
+        """Verrouille ou déverrouille les paramètres de l'environnement et de l'objet.
+        
+        Args:
+            lock: True pour verrouiller, False pour déverrouiller
+        """
+        # Verrouiller les paramètres d'environnement
+        self.simulation_panel.set_sliders_enabled(not lock)
+        
+        # Verrouiller les paramètres d'objet si un objet est sélectionné
+        if self.selected_projectile:
+            self.object_panel.set_sliders_enabled(not lock)
             
     def handle_event(self, event):
         """Gère les événements pour toute l'interface."""

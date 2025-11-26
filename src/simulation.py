@@ -22,6 +22,8 @@ class Simulation:
         # Paramètres d'environnement
         self.gravity = GRAVITY
         self.air_density = AIR_DENSITY
+        self.wind_speed = WIND_SPEED
+        self.wind_direction = WIND_DIRECTION
         
         # Variables pour le déplacement
         self.dragging = False
@@ -144,6 +146,8 @@ class Simulation:
         env_params = self.ui.get_environment_parameters()
         self.gravity = env_params['gravity']
         self.air_density = env_params['air_density']
+        self.wind_speed = env_params['wind_speed']
+        self.wind_direction = env_params['wind_direction']
         
         # Mettre à jour les paramètres du projectile sélectionné
         if self.ui.selected_projectile:
@@ -160,9 +164,13 @@ class Simulation:
         any_launched = any(p.launched for p in self.projectiles)
         self.ui.update_launch_pause_button(has_projectiles, any_launched)
         
+        # Verrouiller les paramètres si des projectiles sont lancés (même en pause)
+        # Cela évite le "téléport" causé par le recalcul de trajectoire avec de nouveaux paramètres
+        self.ui.lock_parameters(any_launched)
+        
         # Mettre à jour tous les projectiles avec les paramètres d'environnement
         for projectile in self.projectiles:
-            projectile.update(TIME_STEP, self.gravity, self.air_density)
+            projectile.update(TIME_STEP, self.gravity, self.air_density, self.wind_speed, self.wind_direction)
             
         # Vérifier si la simulation doit s'arrêter automatiquement
         if self.ui.simulation_running and any_launched:
@@ -180,6 +188,9 @@ class Simulation:
         
         # Dessiner une grille de référence
         self.draw_grid()
+        
+        # Dessiner les indicateurs de vent
+        self.draw_wind_indicators()
         
         # Dessiner le sol
         ground_y = SIM_AREA_Y + SIM_AREA_HEIGHT - 10
@@ -215,4 +226,51 @@ class Simulation:
         for y in range(SIM_AREA_Y, SIM_AREA_Y + SIM_AREA_HEIGHT, grid_spacing):
             pygame.draw.line(self.screen, LIGHT_GRAY, 
                            (SIM_AREA_X, y), (SIM_AREA_X + SIM_AREA_WIDTH, y), 1)
+    
+    def draw_wind_indicators(self):
+        """Dessine des indicateurs visuels du vent dans la zone de simulation."""
+        if self.wind_speed < 0.5:
+            return  # Ne rien afficher si le vent est négligeable
+        
+        # Calculer les composantes du vent pour l'affichage
+        wind_angle_rad = math.radians(self.wind_direction)
+        
+        # Dessiner plusieurs flèches de vent espacées dans la zone de simulation
+        spacing_x = 150
+        spacing_y = 150
+        arrow_length = min(50, self.wind_speed * 3)  # Longueur proportionnelle à la vitesse
+        
+        # Couleur en fonction de la vitesse (plus foncé = plus rapide)
+        intensity = min(255, int(100 + self.wind_speed * 5))
+        wind_color = (100, 100, intensity)
+        
+        for x in range(SIM_AREA_X + 80, SIM_AREA_X + SIM_AREA_WIDTH - 50, spacing_x):
+            for y in range(SIM_AREA_Y + 80, SIM_AREA_Y + SIM_AREA_HEIGHT - 50, spacing_y):
+                # Point de départ de la flèche
+                start_x = x
+                start_y = y
+                
+                # Point d'arrivée de la flèche (direction du vent)
+                end_x = start_x + arrow_length * math.cos(wind_angle_rad)
+                end_y = start_y - arrow_length * math.sin(wind_angle_rad)
+                
+                # Dessiner la ligne principale
+                pygame.draw.line(self.screen, wind_color, 
+                               (int(start_x), int(start_y)), 
+                               (int(end_x), int(end_y)), 2)
+                
+                # Dessiner la pointe de flèche
+                arrow_angle = 0.5
+                arrow_size = 10
+                arrow_x1 = end_x - arrow_size * math.cos(wind_angle_rad - arrow_angle)
+                arrow_y1 = end_y + arrow_size * math.sin(wind_angle_rad - arrow_angle)
+                arrow_x2 = end_x - arrow_size * math.cos(wind_angle_rad + arrow_angle)
+                arrow_y2 = end_y + arrow_size * math.sin(wind_angle_rad + arrow_angle)
+                
+                pygame.draw.line(self.screen, wind_color, 
+                               (int(end_x), int(end_y)), 
+                               (int(arrow_x1), int(arrow_y1)), 2)
+                pygame.draw.line(self.screen, wind_color, 
+                               (int(end_x), int(end_y)), 
+                               (int(arrow_x2), int(arrow_y2)), 2)
     

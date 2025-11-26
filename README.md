@@ -19,11 +19,13 @@ Un simulateur interactif pour étudier la trajectoire de projectiles avec diffé
 ## Installation
 
 1. Installer les dépendances :
+
 ```bash
 pip install -r requirements.txt
 ```
 
 2. Lancer la simulation :
+
 ```bash
 python main.py
 ```

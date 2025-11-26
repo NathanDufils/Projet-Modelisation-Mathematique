@@ -42,31 +42,44 @@ class Projectile:
         self.vy = -self.v0 * math.sin(self.angle)
         self.active = True
         
-    def update(self, dt, gravity=GRAVITY, air_density=AIR_DENSITY):
+    def update(self, dt, gravity=GRAVITY, air_density=AIR_DENSITY, wind_speed=0.0, wind_direction=0.0):
         """Met à jour la position du projectile si il est lancé et pas en pause.
         
         Args:
             dt: Pas de temps
             gravity: Accélération de la pesanteur
             air_density: Densité de l'air
+            wind_speed: Vitesse du vent en m/s
+            wind_direction: Direction du vent en degrés
         """
         if not self.active or not self.launched or self.paused:
             return
             
         self.time += dt
         
-        new_x, new_y, new_vx, new_vy = calculate_trajectory_point(
-            self.x0, self.y0, self.v0, self.angle, 
-            self.time, self.mass, self.radius,
-            gravity, air_density
-        )
-        
-        self.x = new_x
-        self.y = new_y
-        self.vx = new_vx
-        self.vy = new_vy
-        
-        self.trajectory.append((self.x, self.y))
+        try:
+            new_x, new_y, new_vx, new_vy = calculate_trajectory_point(
+                self.x0, self.y0, self.v0, self.angle, 
+                self.time, self.mass, self.radius,
+                gravity, air_density, wind_speed, wind_direction
+            )
+            
+            # Vérifier que les valeurs sont valides
+            if math.isnan(new_x) or math.isnan(new_y) or math.isinf(new_x) or math.isinf(new_y):
+                self.active = False
+                return
+            
+            self.x = new_x
+            self.y = new_y
+            self.vx = new_vx
+            self.vy = new_vy
+            
+            self.trajectory.append((self.x, self.y))
+            
+        except (OverflowError, ValueError):
+            # En cas d'erreur de calcul, arrêter le projectile
+            self.active = False
+            return
         
         # Vérifier les limites
         if self.y >= SIM_AREA_Y + SIM_AREA_HEIGHT - 10 or self.x >= SIM_AREA_X + SIM_AREA_WIDTH:

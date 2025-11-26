@@ -2,6 +2,8 @@
 GRAVITY = 9.81  # m/s^2
 AIR_DENSITY = 1.225  # kg/m^3 (au niveau de la mer)
 DRAG_COEFFICIENT = 0.47  # Coefficient de traînée pour une sphère
+WIND_SPEED = 0.0  # m/s (vitesse du vent)
+WIND_DIRECTION = 0.0  # degrés (0° = droite, 90° = haut, 180° = gauche, 270° = bas)
 
 # Fenêtre
 SCREEN_WIDTH = 1400
@@ -11,12 +13,12 @@ SCREEN_HEIGHT = 700
 SIMULATION_PANEL_X = 20
 SIMULATION_PANEL_Y = 20
 SIMULATION_PANEL_WIDTH = 280
-SIMULATION_PANEL_HEIGHT = 300
+SIMULATION_PANEL_HEIGHT = 420
 
 OBJECT_PANEL_X = 20
-OBJECT_PANEL_Y = 340
+OBJECT_PANEL_Y = 460
 OBJECT_PANEL_WIDTH = 280
-OBJECT_PANEL_HEIGHT = 340
+OBJECT_PANEL_HEIGHT = 220
 
 # Zone de simulation (exclut les panneaux UI)
 SIM_AREA_X = 320
