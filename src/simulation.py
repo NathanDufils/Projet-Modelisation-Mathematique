@@ -166,7 +166,7 @@ class Simulation:
         
         # Verrouiller les paramètres si des projectiles sont lancés (même en pause)
         # Cela évite le "téléport" causé par le recalcul de trajectoire avec de nouveaux paramètres
-        self.ui.lock_parameters(any_launched)
+        # self.ui.lock_parameters(any_launched)  # DÉSACTIVÉ pour permettre les changements dynamiques
         
         # Mettre à jour tous les projectiles avec les paramètres d'environnement
         for projectile in self.projectiles:
