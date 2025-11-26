@@ -132,6 +132,66 @@ class Button:
         text_rect = text_surface.get_rect(center=self.rect.center)
         screen.blit(text_surface, text_rect)
 
+class Compass:
+    def __init__(self, x, y, radius, initial_angle):
+        self.center_x = x
+        self.center_y = y
+        self.radius = radius
+        self.angle = initial_angle
+        self.dragging = False
+        self.enabled = True
+        
+    def handle_event(self, event):
+        if not self.enabled:
+            return False
+            
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = event.pos
+            dist = math.sqrt((mouse_x - self.center_x)**2 + (mouse_y - self.center_y)**2)
+            if dist <= self.radius:
+                self.dragging = True
+                self._update_angle(mouse_x, mouse_y)
+                return True
+                
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.dragging = False
+            
+        elif event.type == pygame.MOUSEMOTION and self.dragging:
+            mouse_x, mouse_y = event.pos
+            self._update_angle(mouse_x, mouse_y)
+            return True
+            
+        return False
+    
+    def _update_angle(self, mouse_x, mouse_y):
+        dx = mouse_x - self.center_x
+        dy = self.center_y - mouse_y  # Y inversé en écran
+        
+        # Calculer l'angle en degrés (0 = Est/Droite, 90 = Nord/Haut)
+        angle = math.degrees(math.atan2(dy, dx))
+        if angle < 0:
+            angle += 360
+        self.angle = angle
+        
+    def set_angle(self, angle):
+        self.angle = angle
+        
+    def draw(self, screen):
+        # Dessiner le fond du compas
+        pygame.draw.circle(screen, WHITE, (self.center_x, self.center_y), self.radius)
+        pygame.draw.circle(screen, BLACK, (self.center_x, self.center_y), self.radius, 2)
+            
+        # Dessiner l'aiguille
+        rad = math.radians(self.angle)
+        end_x = self.center_x + (self.radius - 5) * math.cos(rad)
+        end_y = self.center_y - (self.radius - 5) * math.sin(rad)
+        
+        # Couleur selon activation
+        color = RED if self.enabled else GRAY
+        
+        pygame.draw.line(screen, color, (self.center_x, self.center_y), (end_x, end_y), 3)
+        pygame.draw.circle(screen, color, (self.center_x, self.center_y), 4)
+
 class SimulationPanel:
     """Panneau de contrôle pour les paramètres d'environnement de la simulation."""
     def __init__(self):
@@ -144,16 +204,15 @@ class SimulationPanel:
         self.sliders = {
             'gravity': Slider(self.x + 15, self.y + 70, 200, 20, 0.1, 20.0, GRAVITY, "Gravité (m/s²)"),
             'air_density': Slider(self.x + 15, self.y + 130, 200, 20, 0.0, 2.0, AIR_DENSITY, "Densité air (kg/m³)"),
-            'wind_speed': Slider(self.x + 15, self.y + 190, 200, 20, 0.0, 50.0, WIND_SPEED, "Vent vitesse (m/s)"),
-            'wind_direction': Slider(self.x + 15, self.y + 250, 200, 20, 0.0, 360.0, WIND_DIRECTION, "Vent direction (°)")
+            'wind_speed': Slider(self.x + 15, self.y + 190, 200, 20, 0.0, 50.0, WIND_SPEED, "Vent vitesse (m/s)")
         }
         
         # Boutons de contrôle de la simulation
         self.buttons = {
-            'add_object': Button(self.x + 15, self.y + 300, 110, 30, "Ajouter"),
-            'launch_pause': Button(self.x + 135, self.y + 300, 110, 30, "Lancer"),
-            'reset': Button(self.x + 15, self.y + 340, 110, 30, "Réinitialiser"),
-            'clear': Button(self.x + 135, self.y + 340, 110, 30, "Effacer")
+            'add_object': Button(self.x + 15, self.y + 240, 110, 30, "Ajouter"),
+            'launch_pause': Button(self.x + 135, self.y + 240, 110, 30, "Lancer"),
+            'reset': Button(self.x + 15, self.y + 280, 110, 30, "Réinitialiser"),
+            'clear': Button(self.x + 135, self.y + 280, 110, 30, "Effacer")
         }
         
         self.font = pygame.font.Font(None, 24)
@@ -199,8 +258,7 @@ class SimulationPanel:
         return {
             'gravity': self.sliders['gravity'].val,
             'air_density': self.sliders['air_density'].val,
-            'wind_speed': self.sliders['wind_speed'].val,
-            'wind_direction': self.sliders['wind_direction'].val
+            'wind_speed': self.sliders['wind_speed'].val
         }
     
     def update_launch_pause_button(self, has_objects, any_launched):
@@ -229,10 +287,10 @@ class ObjectPanel:
         
         # Sliders pour les paramètres de l'objet
         self.sliders = {
-            'velocity': Slider(self.x + 15, self.y + 70, 200, 20, 0, 500, 80, "Vitesse (m/s)"),
-            'angle': Slider(self.x + 15, self.y + 120, 200, 20, 0, 360, 45, "Angle (°)"),
-            'mass': Slider(self.x + 15, self.y + 170, 200, 20, 0.001, 100, 1.0, "Masse (kg)"),
-            'radius': RadiusSlider(self.x + 15, self.y + 220, 200, 20, 1.0, 100.0, 10.0, "Rayon (cm)")
+            'velocity': Slider(self.x + 15, self.y + 90, 200, 20, 0, 500, 80, "Vitesse (m/s)"),
+            'angle': Slider(self.x + 15, self.y + 150, 200, 20, 0, 360, 45, "Angle (°)"),
+            'mass': Slider(self.x + 15, self.y + 210, 200, 20, 0.001, 100, 1.0, "Masse (kg)"),
+            'radius': RadiusSlider(self.x + 15, self.y + 270, 200, 20, 1.0, 100.0, 10.0, "Rayon (cm)")
         }
         
         self.font = pygame.font.Font(None, 24)
@@ -318,6 +376,10 @@ class UI:
         self.simulation_panel = SimulationPanel()
         self.object_panel = ObjectPanel()
         
+        # Compas pour la direction du vent (en haut à droite de l'écran)
+        # SCREEN_WIDTH = 1400, on le place à 1330, 70 pour plus de marge
+        self.compass = Compass(1330, 70, 30, WIND_DIRECTION)
+        
         # État de la simulation
         self.simulation_running = False
         
@@ -343,6 +405,7 @@ class UI:
         """
         # Verrouiller les paramètres d'environnement
         self.simulation_panel.set_sliders_enabled(not lock)
+        self.compass.enabled = not lock
         
         # Verrouiller les paramètres d'objet si un objet est sélectionné
         if self.selected_projectile:
@@ -357,6 +420,9 @@ class UI:
                 self.simulation_running = not self.simulation_running
                 self.simulation_panel.simulation_running = self.simulation_running
             return sim_action
+            
+        # Gérer les événements du compas
+        self.compass.handle_event(event)
         
         # Gérer les événements du panneau d'objet
         self.object_panel.handle_event(event)
@@ -367,6 +433,7 @@ class UI:
         """Dessine toute l'interface utilisateur."""
         self.simulation_panel.draw(screen)
         self.object_panel.draw(screen)
+        self.compass.draw(screen)
             
     def get_object_parameters(self):
         """Retourne les paramètres de l'objet sélectionné."""
@@ -374,7 +441,9 @@ class UI:
     
     def get_environment_parameters(self):
         """Retourne les paramètres d'environnement."""
-        return self.simulation_panel.get_environment_parameters()
+        params = self.simulation_panel.get_environment_parameters()
+        params['wind_direction'] = self.compass.angle
+        return params
     
     def draw_info(self, screen, projectiles):
         """Affiche des informations sur les projectiles en haut à gauche de la zone de simulation."""
