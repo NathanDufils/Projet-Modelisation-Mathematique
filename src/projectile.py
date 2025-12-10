@@ -1,7 +1,7 @@
 import pygame
 import math
 from src.settings import *
-from src.physics import calculate_trajectory_point
+from src.physics import update_physics_step
 
 class Projectile:
     def __init__(self, x0, y0, v0=50, angle=45, mass=1.0, radius=0.1, color=RED):
@@ -58,9 +58,9 @@ class Projectile:
         self.time += dt
         
         try:
-            new_x, new_y, new_vx, new_vy = calculate_trajectory_point(
-                self.x0, self.y0, self.v0, self.angle, 
-                self.time, self.mass, self.radius,
+            new_x, new_y, new_vx, new_vy = update_physics_step(
+                self.x, self.y, self.vx, self.vy, 
+                dt, self.mass, self.radius,
                 gravity, air_density, wind_speed, wind_direction
             )
             
@@ -109,17 +109,20 @@ class Projectile:
             self.trajectory = [(x, y)]
     
     def set_parameters(self, v0=None, angle=None, mass=None, radius=None):
-        """Modifie les paramètres du projectile (seulement si pas lancé)."""
+        """Modifie les paramètres du projectile."""
+        # Paramètres modifiables à tout moment (dynamiques)
+        if mass is not None:
+            self.mass = mass
+        if radius is not None:
+            self.radius = radius
+            
+        # Paramètres modifiables seulement si pas lancé (conditions initiales)
         if not self.launched:
             if v0 is not None:
                 self.v0 = v0
             if angle is not None:
                 self.angle_degrees = angle
                 self.angle = math.radians(angle)
-            if mass is not None:
-                self.mass = mass
-            if radius is not None:
-                self.radius = radius
                 
             # Recalculer les vitesses initiales
             self.vx = self.v0 * math.cos(self.angle)
@@ -183,9 +186,14 @@ class Projectile:
         end_x = self.x + vel_length * math.cos(self.angle)
         end_y = self.y - vel_length * math.sin(self.angle)
         
-        pygame.draw.line(screen, GREEN,
-                        (int(self.x), int(self.y)),
-                        (int(end_x), int(end_y)), 3)
+        # Clamp coordinates to avoid Pygame overflow
+        def clamp_coord(val):
+            return max(-10000, min(10000, int(val)))
+            
+        start_pos = (clamp_coord(self.x), clamp_coord(self.y))
+        end_pos = (clamp_coord(end_x), clamp_coord(end_y))
+        
+        pygame.draw.line(screen, GREEN, start_pos, end_pos, 3)
         
         # Pointe de flèche
         arrow_length = 10
@@ -195,5 +203,8 @@ class Projectile:
         arrow_x2 = end_x - arrow_length * math.cos(self.angle + arrow_angle)
         arrow_y2 = end_y + arrow_length * math.sin(self.angle + arrow_angle)
         
-        pygame.draw.line(screen, GREEN, (int(end_x), int(end_y)), (int(arrow_x1), int(arrow_y1)), 2)
-        pygame.draw.line(screen, GREEN, (int(end_x), int(end_y)), (int(arrow_x2), int(arrow_y2)), 2)
+        arrow_p1 = (clamp_coord(arrow_x1), clamp_coord(arrow_y1))
+        arrow_p2 = (clamp_coord(arrow_x2), clamp_coord(arrow_y2))
+        
+        pygame.draw.line(screen, GREEN, end_pos, arrow_p1, 2)
+        pygame.draw.line(screen, GREEN, end_pos, arrow_p2, 2)
