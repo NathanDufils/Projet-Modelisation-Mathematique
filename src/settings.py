@@ -7,7 +7,7 @@ WIND_DIRECTION = 0.0  # degrés (0° = droite, 90° = haut, 180° = gauche, 270�
 
 # Fenêtre
 SCREEN_WIDTH = 1400
-SCREEN_HEIGHT = 700
+SCREEN_HEIGHT = 800
 
 # Panneaux de contrôle
 SIMULATION_PANEL_X = 20

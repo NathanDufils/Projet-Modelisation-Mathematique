@@ -140,6 +140,24 @@ class Simulation:
             self.projectiles.clear()
             self.select_projectile(None)
             self.ui.simulation_running = False
+            
+        # Actions sur le projectile individuel sélectionné
+        elif action == 'launch_selected':
+            if self.ui.selected_projectile:
+                self.ui.selected_projectile.launch()
+                
+        elif action == 'pause_selected':
+            if self.ui.selected_projectile:
+                self.ui.selected_projectile.pause()
+                
+        elif action == 'reset_selected':
+            if self.ui.selected_projectile:
+                self.ui.selected_projectile.reset()
+                
+        elif action == 'delete_selected':
+            if self.ui.selected_projectile:
+                self.projectiles.remove(self.ui.selected_projectile)
+                self.select_projectile(None)
     
     def update(self):
         # Mettre à jour les paramètres d'environnement

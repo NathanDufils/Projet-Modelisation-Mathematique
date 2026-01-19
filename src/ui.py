@@ -293,6 +293,14 @@ class ObjectPanel:
             'radius': RadiusSlider(self.x + 15, self.y + 270, 200, 20, 1.0, 100.0, 10.0, "Rayon (cm)")
         }
         
+        # Boutons de contrôle individuel du projectile sélectionné
+        self.buttons = {
+            'launch_selected': Button(self.x + 15, self.y + 320, 105, 30, "Lancer", (150, 255, 150)),
+            'pause_selected': Button(self.x + 125, self.y + 320, 105, 30, "Pause", (255, 255, 150)),
+            'reset_selected': Button(self.x + 15, self.y + 360, 105, 30, "Réinit.", (150, 200, 255)),
+            'delete_selected': Button(self.x + 125, self.y + 360, 105, 30, "Suppr.", (255, 150, 150))
+        }
+        
         self.font = pygame.font.Font(None, 24)
         self.title_font = pygame.font.Font(None, 28)
         self.small_font = pygame.font.Font(None, 20)
@@ -323,6 +331,11 @@ class ObjectPanel:
         if self.selected_projectile:
             for slider in self.sliders.values():
                 slider.handle_event(event)
+            
+            # Gérer les boutons de contrôle individuel
+            for name, button in self.buttons.items():
+                if button.handle_event(event):
+                    return name
         return None
     
     def draw(self, screen):
@@ -338,12 +351,34 @@ class ObjectPanel:
         
         # Afficher l'état de sélection
         if self.selected_projectile:
-            status_text = self.small_font.render("Modifiez les paramètres", True, DARK_GRAY)
+            # Afficher le statut du projectile
+            if self.selected_projectile.launched:
+                if self.selected_projectile.paused:
+                    status = "En pause"
+                    status_color = (200, 150, 0)
+                elif self.selected_projectile.active:
+                    status = "En vol"
+                    status_color = GREEN
+                else:
+                    status = "Terminé"
+                    status_color = RED
+            else:
+                status = "Prêt"
+                status_color = BLUE
+                
+            status_text = self.small_font.render(f"Statut: {status}", True, status_color)
             screen.blit(status_text, (self.x + 10, self.y + 40))
+            
+            info_text = self.small_font.render("Modifiez les paramètres", True, DARK_GRAY)
+            screen.blit(info_text, (self.x + 10, self.y + 60))
             
             # Dessiner les sliders
             for slider in self.sliders.values():
                 slider.draw(screen)
+            
+            # Dessiner les boutons de contrôle individuel
+            for button in self.buttons.values():
+                button.draw(screen)
         else:
             status_text = self.small_font.render("Aucun objet sélectionné", True, GRAY)
             screen.blit(status_text, (self.x + 10, self.y + 40))
@@ -424,8 +459,10 @@ class UI:
         # Gérer les événements du compas
         self.compass.handle_event(event)
         
-        # Gérer les événements du panneau d'objet
-        self.object_panel.handle_event(event)
+        # Gérer les événements du panneau d'objet (y compris les boutons individuels)
+        obj_action = self.object_panel.handle_event(event)
+        if obj_action:
+            return obj_action
         
         return None
     
@@ -464,7 +501,7 @@ class UI:
                 info_texts = [
                     f"Portée: {max_x - proj.x0:.1f} m",
                     f"Temps de vol: {proj.time:.2f} s",
-                    f"Trajectoire terminée"
+                    "Trajectoire terminée"
                 ]
             else:
                 info_texts = [
