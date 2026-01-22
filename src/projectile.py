@@ -168,12 +168,35 @@ class Projectile:
     
     def draw_indicators(self, screen):
         """Dessine les indicateurs d'angle et de vitesse."""
+        # Déterminer les valeurs à afficher
+        if self.launched:
+            # En vol (ou pause) : utiliser les valeurs courantes
+            # Angle actuel (0 = droite, positif horaire car Y inversé en Pygame)
+            # MAIS atan2(dy, dx) donne positif anti-horaire en maths classiques si Y monte
+            # Ici Y descend. vy est négatif si ça monte.
+            # v0 * sin(angle) = -vy  => angle physique
+            angle = math.atan2(-self.vy, self.vx)
+            velocity = math.sqrt(self.vx**2 + self.vy**2)
+        else:
+            # Pas encore lancé : valeurs initiales
+            angle = self.angle
+            velocity = self.v0
+            
         # Arc pour l'angle
         arc_radius = 30
+        # Pygame draw.arc prend des angles en radians, 0 est à droite, sens horaire
+        # Mais draw.arc prend des degrés ? Non, radians pour math, mais degrés pour arc ?
+        # Vérif : doc Pygame draw.arc arguments are rect, start_angle, stop_angle in radians.
+        # ATTENTION: Pygame coordinate system Y is down.
+        # Math angle: 0 right, PI/2 up (negative Y) -> -PI/2 in logic?
+        # Pour l'affichage simple, on redessine l'arc de 0 à l'angle actuel
+        
+        # Pour simplifier l'affichage visuel correspondant à la flèche
+        # On dessine juste l'arc entre 0 et l'angle
         pygame.draw.arc(screen, DARK_GRAY,
                       (self.x - arc_radius, self.y - arc_radius,
                        arc_radius * 2, arc_radius * 2),
-                      0, self.angle, 2)
+                      0, angle, 2)
         
         # Ligne de référence horizontale
         pygame.draw.line(screen, LIGHT_GRAY,
@@ -182,9 +205,9 @@ class Projectile:
         
         # Vecteur de vitesse
         vel_scale = 2
-        vel_length = self.v0 * vel_scale
-        end_x = self.x + vel_length * math.cos(self.angle)
-        end_y = self.y - vel_length * math.sin(self.angle)
+        vel_length = velocity * vel_scale
+        end_x = self.x + vel_length * math.cos(angle)
+        end_y = self.y - vel_length * math.sin(angle)
         
         # Clamp coordinates to avoid Pygame overflow
         def clamp_coord(val):
@@ -198,10 +221,10 @@ class Projectile:
         # Pointe de flèche
         arrow_length = 10
         arrow_angle = 0.4
-        arrow_x1 = end_x - arrow_length * math.cos(self.angle - arrow_angle)
-        arrow_y1 = end_y + arrow_length * math.sin(self.angle - arrow_angle)
-        arrow_x2 = end_x - arrow_length * math.cos(self.angle + arrow_angle)
-        arrow_y2 = end_y + arrow_length * math.sin(self.angle + arrow_angle)
+        arrow_x1 = end_x - arrow_length * math.cos(angle - arrow_angle)
+        arrow_y1 = end_y + arrow_length * math.sin(angle - arrow_angle)
+        arrow_x2 = end_x - arrow_length * math.cos(angle + arrow_angle)
+        arrow_y2 = end_y + arrow_length * math.sin(angle + arrow_angle)
         
         arrow_p1 = (clamp_coord(arrow_x1), clamp_coord(arrow_y1))
         arrow_p2 = (clamp_coord(arrow_x2), clamp_coord(arrow_y2))

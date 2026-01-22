@@ -62,9 +62,9 @@ class Slider:
             border_color = LIGHT_GRAY
             text_color = GRAY
         
-        # Dessiner la barre du slider
-        pygame.draw.rect(screen, bar_color, self.rect)
-        pygame.draw.rect(screen, border_color, self.rect, 2)
+        # Dessiner la barre du slider (arrondie)
+        pygame.draw.rect(screen, bar_color, self.rect, border_radius=5)
+        pygame.draw.rect(screen, border_color, self.rect, 2, border_radius=5)
         
         # Dessiner le handle
         pygame.draw.circle(screen, handle_color, (int(self.handle_x), self.rect.centery), self.handle_radius)
@@ -93,9 +93,9 @@ class RadiusSlider(Slider):
             border_color = LIGHT_GRAY
             text_color = GRAY
         
-        # Dessiner la barre du slider
-        pygame.draw.rect(screen, bar_color, self.rect)
-        pygame.draw.rect(screen, border_color, self.rect, 2)
+        # Dessiner la barre du slider (arrondie)
+        pygame.draw.rect(screen, bar_color, self.rect, border_radius=5)
+        pygame.draw.rect(screen, border_color, self.rect, 2, border_radius=5)
         
         # Dessiner le handle
         pygame.draw.circle(screen, handle_color, (int(self.handle_x), self.rect.centery), self.handle_radius)
@@ -125,8 +125,8 @@ class Button:
         return False
     
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, self.rect)
-        pygame.draw.rect(screen, BLACK, self.rect, 2)
+        pygame.draw.rect(screen, self.color, self.rect, border_radius=8)
+        pygame.draw.rect(screen, BLACK, self.rect, 2, border_radius=8)
         
         text_surface = self.font.render(self.text, True, BLACK)
         text_rect = text_surface.get_rect(center=self.rect.center)
@@ -200,19 +200,34 @@ class SimulationPanel:
         self.width = SIMULATION_PANEL_WIDTH
         self.height = SIMULATION_PANEL_HEIGHT
         
+        # Calcul des dimensions responsive
+        slider_width = self.width - 2 * PADDING
+        slider_x = self.x + PADDING
+        slider_height = 20
+        
+        # Calcul des positions verticales avec espacement uniforme
+        title_height = 40
+        slider_spacing = 60  # Espace entre chaque slider (label + slider)
+        
         # Sliders pour les paramètres d'environnement
         self.sliders = {
-            'gravity': Slider(self.x + 15, self.y + 70, 200, 20, 0.1, 20.0, GRAVITY, "Gravité (m/s²)"),
-            'air_density': Slider(self.x + 15, self.y + 130, 200, 20, 0.0, 2.0, AIR_DENSITY, "Densité air (kg/m³)"),
-            'wind_speed': Slider(self.x + 15, self.y + 190, 200, 20, 0.0, 50.0, WIND_SPEED, "Vent vitesse (m/s)")
+            'gravity': Slider(slider_x, self.y + title_height + 30, slider_width, slider_height, 0.1, 20.0, GRAVITY, "Gravité (m/s²)"),
+            'air_density': Slider(slider_x, self.y + title_height + 30 + slider_spacing, slider_width, slider_height, 0.0, 2.0, AIR_DENSITY, "Densité de l'air (kg/m³)"),
+            'wind_speed': Slider(slider_x, self.y + title_height + 30 + 2 * slider_spacing, slider_width, slider_height, 0.0, 50.0, WIND_SPEED, "Vitesse du vent (m/s)")
         }
+        
+        # Calcul des boutons responsive (2 par ligne)
+        button_width = (self.width - 3 * PADDING) // 2
+        button_height = 35
+        button_y1 = self.y + title_height + 30 + 3 * slider_spacing
+        button_y2 = button_y1 + button_height + SPACING
         
         # Boutons de contrôle de la simulation
         self.buttons = {
-            'add_object': Button(self.x + 15, self.y + 240, 110, 30, "Ajouter"),
-            'launch_pause': Button(self.x + 135, self.y + 240, 110, 30, "Lancer"),
-            'reset': Button(self.x + 15, self.y + 280, 110, 30, "Réinitialiser"),
-            'clear': Button(self.x + 135, self.y + 280, 110, 30, "Effacer")
+            'add_object': Button(slider_x, button_y1, button_width, button_height, "Ajouter"),
+            'launch_pause': Button(slider_x + button_width + PADDING, button_y1, button_width, button_height, "Lancer"),
+            'reset': Button(slider_x, button_y2, button_width, button_height, "Réinitialiser"),
+            'clear': Button(slider_x + button_width + PADDING, button_y2, button_width, button_height, "Effacer")
         }
         
         self.font = pygame.font.Font(None, 24)
@@ -231,10 +246,10 @@ class SimulationPanel:
     
     def draw(self, screen):
         """Dessine le panneau de simulation."""
-        # Fond du panneau
+        # Fond du panneau (arrondi)
         panel_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        pygame.draw.rect(screen, (240, 240, 250), panel_rect)
-        pygame.draw.rect(screen, BLACK, panel_rect, 3)
+        pygame.draw.rect(screen, (240, 240, 250), panel_rect, border_radius=12)
+        pygame.draw.rect(screen, BLACK, panel_rect, 3, border_radius=12)
         
         # Titre
         title = self.title_font.render("Environnement", True, BLACK)
@@ -285,20 +300,36 @@ class ObjectPanel:
         self.width = OBJECT_PANEL_WIDTH
         self.height = OBJECT_PANEL_HEIGHT
         
+        # Calcul des dimensions responsive
+        slider_width = self.width - 2 * PADDING
+        slider_x = self.x + PADDING
+        slider_height = 20
+        
+        # Calcul des positions verticales
+        title_height = 40
+        status_height = 40
+        start_y_sliders = self.y + title_height + status_height + 10
+        slider_spacing = 60
+        
         # Sliders pour les paramètres de l'objet
         self.sliders = {
-            'velocity': Slider(self.x + 15, self.y + 90, 200, 20, 0, 500, 80, "Vitesse (m/s)"),
-            'angle': Slider(self.x + 15, self.y + 150, 200, 20, 0, 360, 45, "Angle (°)"),
-            'mass': Slider(self.x + 15, self.y + 210, 200, 20, 0.001, 100, 1.0, "Masse (kg)"),
-            'radius': RadiusSlider(self.x + 15, self.y + 270, 200, 20, 1.0, 100.0, 10.0, "Rayon (cm)")
+            'velocity': Slider(slider_x, start_y_sliders, slider_width, slider_height, 0, 500, 80, "Vitesse (m/s)"),
+            'angle': Slider(slider_x, start_y_sliders + slider_spacing, slider_width, slider_height, 0, 360, 45, "Angle (°)"),
+            'mass': Slider(slider_x, start_y_sliders + 2 * slider_spacing, slider_width, slider_height, 0.001, 100, 1.0, "Masse (kg)"),
+            'radius': RadiusSlider(slider_x, start_y_sliders + 3 * slider_spacing, slider_width, slider_height, 1.0, 100.0, 10.0, "Rayon (cm)")
         }
         
+        # Calcul des boutons responsive (2 par ligne)
+        button_width = (self.width - 3 * PADDING) // 2
+        button_height = 35
+        # On place les boutons juste après les sliders avec un peu plus d'espace
+        button_y = start_y_sliders + 4 * slider_spacing
+        
         # Boutons de contrôle individuel du projectile sélectionné
+        # Seuls Réinitialiser et Supprimer sont conservés sur demande utilisateur
         self.buttons = {
-            'launch_selected': Button(self.x + 15, self.y + 320, 105, 30, "Lancer", (150, 255, 150)),
-            'pause_selected': Button(self.x + 125, self.y + 320, 105, 30, "Pause", (255, 255, 150)),
-            'reset_selected': Button(self.x + 15, self.y + 360, 105, 30, "Réinit.", (150, 200, 255)),
-            'delete_selected': Button(self.x + 125, self.y + 360, 105, 30, "Suppr.", (255, 150, 150))
+            'reset_selected': Button(slider_x, button_y, button_width, button_height, "Réinitialiser", (150, 200, 255)),
+            'delete_selected': Button(slider_x + button_width + PADDING, button_y, button_width, button_height, "Supprimer", (255, 150, 150))
         }
         
         self.font = pygame.font.Font(None, 24)
@@ -340,10 +371,10 @@ class ObjectPanel:
     
     def draw(self, screen):
         """Dessine le panneau d'objet."""
-        # Fond du panneau
+        # Fond du panneau (arrondi)
         panel_rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        pygame.draw.rect(screen, (250, 240, 240), panel_rect)
-        pygame.draw.rect(screen, BLACK, panel_rect, 3)
+        pygame.draw.rect(screen, (250, 240, 240), panel_rect, border_radius=12)
+        pygame.draw.rect(screen, BLACK, panel_rect, 3, border_radius=12)
         
         # Titre
         title = self.title_font.render("Objet sélectionné", True, BLACK)
@@ -352,25 +383,12 @@ class ObjectPanel:
         # Afficher l'état de sélection
         if self.selected_projectile:
             # Afficher le statut du projectile
-            if self.selected_projectile.launched:
-                if self.selected_projectile.paused:
-                    status = "En pause"
-                    status_color = (200, 150, 0)
-                elif self.selected_projectile.active:
-                    status = "En vol"
-                    status_color = GREEN
-                else:
-                    status = "Terminé"
-                    status_color = RED
-            else:
-                status = "Prêt"
-                status_color = BLUE
-                
-            status_text = self.small_font.render(f"Statut: {status}", True, status_color)
-            screen.blit(status_text, (self.x + 10, self.y + 40))
+            # Afficher le statut du projectile
+             # Statut supprimé sur demande utilisateur pour simplifier l'interface
+             # Seul le message d'invite est conservé
             
-            info_text = self.small_font.render("Modifiez les paramètres", True, DARK_GRAY)
-            screen.blit(info_text, (self.x + 10, self.y + 60))
+            info_text = self.small_font.render("Modifier les paramètres", True, DARK_GRAY)
+            screen.blit(info_text, (self.x + 10, self.y + 40))
             
             # Dessiner les sliders
             for slider in self.sliders.values():
@@ -383,10 +401,10 @@ class ObjectPanel:
             status_text = self.small_font.render("Aucun objet sélectionné", True, GRAY)
             screen.blit(status_text, (self.x + 10, self.y + 40))
             
-            # Dessiner les sliders grisés
+            # Dessiner les sliders grisés (arrondis)
             for slider in self.sliders.values():
-                pygame.draw.rect(screen, LIGHT_GRAY, slider.rect)
-                pygame.draw.rect(screen, GRAY, slider.rect, 2)
+                pygame.draw.rect(screen, LIGHT_GRAY, slider.rect, border_radius=5)
+                pygame.draw.rect(screen, GRAY, slider.rect, 2, border_radius=5)
                 label_text = slider.font.render(f"{slider.label}: --", True, GRAY)
                 screen.blit(label_text, (slider.rect.x, slider.rect.y - 25))
     
@@ -399,10 +417,18 @@ class ObjectPanel:
             'radius': self.sliders['radius'].get_value_in_meters()
         }
     
+    
     def set_sliders_enabled(self, enabled):
         """Active ou désactive tous les sliders du panneau."""
         for slider in self.sliders.values():
             slider.enabled = enabled
+
+    def set_launch_parameters_enabled(self, enabled):
+        """Active ou désactive uniquement les paramètres de lancement (vitesse, angle)."""
+        if 'velocity' in self.sliders:
+            self.sliders['velocity'].enabled = enabled
+        if 'angle' in self.sliders:
+            self.sliders['angle'].enabled = enabled
 
 
 class UI:
@@ -412,8 +438,10 @@ class UI:
         self.object_panel = ObjectPanel()
         
         # Compas pour la direction du vent (en haut à droite de l'écran)
-        # SCREEN_WIDTH = 1400, on le place à 1330, 70 pour plus de marge
-        self.compass = Compass(1330, 70, 30, WIND_DIRECTION)
+        compass_radius = 30
+        compass_x = SCREEN_WIDTH - compass_radius - 2 * MARGIN
+        compass_y = compass_radius + 2 * MARGIN
+        self.compass = Compass(compass_x, compass_y, compass_radius, WIND_DIRECTION)
         
         # État de la simulation
         self.simulation_running = False
@@ -426,6 +454,10 @@ class UI:
         """Définit le projectile sélectionné et met à jour les sliders."""
         self.selected_projectile = projectile
         self.object_panel.set_selected_projectile(projectile)
+        
+    def lock_launch_parameters(self, lock):
+        """Verrouille ou déverrouille les paramètres de lancement."""
+        self.object_panel.set_launch_parameters_enabled(not lock)
     
     def update_launch_pause_button(self, has_projectiles, any_launched):
         """Met à jour le texte du bouton lancer/pause selon l'état de la simulation."""
@@ -491,18 +523,41 @@ class UI:
             proj = self.selected_projectile
             if proj.launched and proj.active:
                 speed = math.sqrt(proj.vx**2 + proj.vy**2)
+                # Calul de l'angle courant en degrés
+                current_angle = math.degrees(math.atan2(-proj.vy, proj.vx))
+                if current_angle < 0:
+                    current_angle += 360
+                    
                 info_texts = [
                     f"Position: ({proj.x:.1f}, {proj.y:.1f})",
                     f"Vitesse: {speed:.1f} m/s",
-                    f"Temps: {proj.time:.2f} s"
+                    f"Angle: {current_angle:.1f}°"
                 ]
+                
+                # Affichage du temps en bas à gauche
+                time_text = f"Temps: {proj.time:.2f} s"
+                time_surface = self.small_font.render(time_text, True, BLACK)
+                screen.blit(time_surface, (SIM_AREA_X + 10, SIM_AREA_Y + SIM_AREA_HEIGHT - 30))
+                
             elif proj.launched and not proj.active:
                 max_x = max([pos[0] for pos in proj.trajectory]) if proj.trajectory else 0
+                
+                # Calcul de l'angle final (ou d'impact)
+                current_angle = math.degrees(math.atan2(-proj.vy, proj.vx))
+                if current_angle < 0:
+                    current_angle += 360
+                    
                 info_texts = [
                     f"Portée: {max_x - proj.x0:.1f} m",
-                    f"Temps de vol: {proj.time:.2f} s",
+                    f"Angle impact: {current_angle:.1f}°",
                     "Trajectoire terminée"
                 ]
+                
+                # Affichage du temps total en bas à gauche
+                time_text = f"t = {proj.time:.2f} s"
+                time_surface = self.small_font.render(time_text, True, BLACK)
+                screen.blit(time_surface, (SIM_AREA_X + 10, SIM_AREA_Y + SIM_AREA_HEIGHT - 30))
+                
             else:
                 info_texts = [
                     f"Position: ({proj.x:.1f}, {proj.y:.1f})",
@@ -512,7 +567,7 @@ class UI:
         else:
             info_texts = [
                 f"Projectiles: {len(projectiles)}",
-                f"Actifs: {sum(1 for p in projectiles if p.launched and p.active)}",
+                # "Actifs: ..." supprimé sur demande utilisateur
                 "Cliquez pour sélectionner"
             ]
             

@@ -142,14 +142,6 @@ class Simulation:
             self.ui.simulation_running = False
             
         # Actions sur le projectile individuel sélectionné
-        elif action == 'launch_selected':
-            if self.ui.selected_projectile:
-                self.ui.selected_projectile.launch()
-                
-        elif action == 'pause_selected':
-            if self.ui.selected_projectile:
-                self.ui.selected_projectile.pause()
-                
         elif action == 'reset_selected':
             if self.ui.selected_projectile:
                 self.ui.selected_projectile.reset()
@@ -182,9 +174,9 @@ class Simulation:
         any_launched = any(p.launched for p in self.projectiles)
         self.ui.update_launch_pause_button(has_projectiles, any_launched)
         
-        # Verrouiller les paramètres si des projectiles sont lancés (même en pause)
-        # Cela évite le "téléport" causé par le recalcul de trajectoire avec de nouveaux paramètres
-        # self.ui.lock_parameters(any_launched)  # DÉSACTIVÉ pour permettre les changements dynamiques
+        # Verrouiller les paramètres de lancement (vitesse, angle) si des projectiles sont lancés
+        # Cela évite de modifier les conditions initiales pendant le vol
+        self.ui.lock_launch_parameters(any_launched)
         
         # Mettre à jour tous les projectiles avec les paramètres d'environnement
         for projectile in self.projectiles:
