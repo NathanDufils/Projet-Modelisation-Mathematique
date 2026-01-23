@@ -1,13 +1,13 @@
-# 📚 Index de la Documentation - Simulateur Balistique
+# Index de la Documentation - Simulateur de Trajectoires Multi-Projectiles
 
-> 📂 **Organisation** : Toute la documentation est maintenant dans le dossier `docs/`  
-> 🏠 **Retour** : [README principal du projet](../README.md)
+> **Organisation** : Toute la documentation est maintenant dans le dossier `docs/`  
+> **Retour** : [README principal du projet](../README.md)
 
-## 🎯 Trouvez Rapidement ce dont Vous Avez Besoin
+## Trouvez Rapidement ce dont Vous Avez Besoin
 
 ---
 
-## 🚀 Démarrage
+## Démarrage
 
 ### Je veux commencer immédiatement
 → **[DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md)**
@@ -15,16 +15,9 @@
 - Premier projectile en 3 étapes
 - Expériences rapides (30 sec à 2 min)
 
-### Je veux une vue d'ensemble
-→ **[RESUME.md](RESUME.md)**
-- Résumé des nouveautés
-- Scénarios d'utilisation
-- Astuces rapides
-- Aide rapide
-
 ---
 
-## 📖 Guides Utilisateur
+## Guides Utilisateur
 
 ### Comment utiliser le simulateur ?
 → **[README principal](../README.md)** ou **[README docs](README.md)**
@@ -44,7 +37,7 @@
 
 ---
 
-## 🔬 Documentation Technique
+## Documentation Technique
 
 ### Je veux comprendre les mathématiques
 → **[DOCUMENTATION_MATHEMATIQUES.md](DOCUMENTATION_MATHEMATIQUES.md)**
@@ -68,7 +61,7 @@
 
 ---
 
-## 📝 Informations sur le Projet
+## Informations sur le Projet
 
 ### Quels sont les changements récents ?
 → **[CHANGEMENTS.md](CHANGEMENTS.md)**
@@ -80,12 +73,11 @@
 
 ---
 
-## 🗺️ Navigation par Besoin
+## Navigation par Besoin
 
 ### Besoin : "Je débute avec le simulateur"
 1. [DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md) - Commencer
-2. [RESUME.md](RESUME.md) - Comprendre les bases
-3. [GUIDE_UTILISATION.md](GUIDE_UTILISATION.md) - Approfondir
+2. [GUIDE_UTILISATION.md](GUIDE_UTILISATION.md) - Approfondir
 
 ### Besoin : "Je veux faire des expériences"
 1. [GUIDE_UTILISATION.md](GUIDE_UTILISATION.md) - Scénarios
@@ -103,11 +95,10 @@
 ### Besoin : "J'ai un problème"
 1. [README.md](README.md) - Section "Résolution de Problèmes"
 2. [GUIDE_UTILISATION.md](GUIDE_UTILISATION.md) - Section "Cas Particuliers"
-3. [RESUME.md](RESUME.md) - Section "Problèmes Courants"
 
 ---
 
-## 📊 Tableau de Référence Rapide
+## Tableau de Référence Rapide
 
 | Question | Fichier | Section |
 |----------|---------|---------|
@@ -124,44 +115,42 @@
 
 ---
 
-## 🎯 Par Type d'Utilisateur
+## Par Type d'Utilisateur
 
 ### Étudiant en Maths/Physique
-📚 Priorité :
+Priorité :
 1. DOCUMENTATION_MATHEMATIQUES.md
 2. README.md (Contexte pédagogique)
 3. GUIDE_UTILISATION.md (Expériences)
 
 ### Développeur
-💻 Priorité :
+Priorité :
 1. ARCHITECTURE.md
 2. README.md (Structure)
 3. Code source (`src/`)
 
 ### Utilisateur Casual
-🎮 Priorité :
+Priorité :
 1. DEMARRAGE_RAPIDE.md
-2. RESUME.md
-3. GUIDE_UTILISATION.md (Scénarios)
+2. GUIDE_UTILISATION.md (Scénarios)
 
 ---
 
-## 📏 Taille des Fichiers
+## Taille des Fichiers
 
 | Fichier | Taille | Temps de Lecture |
 |---------|--------|------------------|
 | DEMARRAGE_RAPIDE.md | ~3 KB | 2-3 min |
-| RESUME.md | ~6 KB | 5-7 min |
 | README.md | ~8 KB | 10-12 min |
 | GUIDE_UTILISATION.md | ~6 KB | 8-10 min |
 | ARCHITECTURE.md | ~8 KB | 10-15 min |
 | CHANGEMENTS.md | ~5 KB | 5-8 min |
 | DOCUMENTATION_MATHEMATIQUES.md | ~15 KB | 30-45 min |
-| **TOTAL** | **~51 KB** | **1h-2h** |
+| **TOTAL** | **~45 KB** | **1h-2h** |
 
 ---
 
-## 🔍 Recherche par Mot-Clé
+## Recherche par Mot-Clé
 
 ### Physique
 - **Gravité** → DOCUMENTATION_MATHEMATIQUES.md
@@ -176,10 +165,10 @@
 - **Formules** → DOCUMENTATION_MATHEMATIQUES.md
 
 ### Fonctionnalités
-- **Lancer** → GUIDE_UTILISATION.md, RESUME.md
-- **Pause** → GUIDE_UTILISATION.md, RESUME.md
-- **Réinitialiser** → GUIDE_UTILISATION.md, RESUME.md
-- **Supprimer** → GUIDE_UTILISATION.md, RESUME.md
+- **Lancer** → GUIDE_UTILISATION.md
+- **Pause** → GUIDE_UTILISATION.md
+- **Réinitialiser** → GUIDE_UTILISATION.md
+- **Supprimer** → GUIDE_UTILISATION.md
 
 ### Technique
 - **Architecture** → ARCHITECTURE.md
@@ -190,19 +179,18 @@
 ### Utilisation
 - **Scénarios** → GUIDE_UTILISATION.md
 - **Expériences** → GUIDE_UTILISATION.md
-- **Astuces** → GUIDE_UTILISATION.md, RESUME.md
+- **Astuces** → GUIDE_UTILISATION.md
 - **Problèmes** → README.md, GUIDE_UTILISATION.md
 
 ---
 
-## 📖 Ordre de Lecture Suggéré
+## Ordre de Lecture Suggéré
 
 ### Pour un Débutant
 1. **DEMARRAGE_RAPIDE.md** - Commencez ici ! (3 min)
-2. **RESUME.md** - Vue d'ensemble (5 min)
-3. **GUIDE_UTILISATION.md** - Approfondissement (10 min)
-4. **README.md** - Documentation complète (12 min)
-5. **DOCUMENTATION_MATHEMATIQUES.md** - Si intéressé par la théorie (45 min)
+2. **GUIDE_UTILISATION.md** - Approfondissement (10 min)
+3. **README.md** - Documentation complète (12 min)
+4. **DOCUMENTATION_MATHEMATIQUES.md** - Si intéressé par la théorie (45 min)
 
 ### Pour un Développeur
 1. **README.md** - Vue d'ensemble du projet (12 min)
@@ -219,7 +207,7 @@
 
 ---
 
-## 🎓 Ressources Complémentaires
+## Ressources Complémentaires
 
 ### Fichiers Code Source
 - `src/simulation.py` - Boucle principale
@@ -234,13 +222,12 @@
 
 ---
 
-## 🌟 Recommandations
+## Recommandations
 
 ### Lecture Minimale (15 minutes)
 Pour utiliser le simulateur rapidement :
 1. **DEMARRAGE_RAPIDE.md** (3 min)
-2. **RESUME.md** (5 min)
-3. Parties essentielles de **GUIDE_UTILISATION.md** (7 min)
+2. Parties essentielles de **GUIDE_UTILISATION.md** (10 min)
 
 ### Lecture Complète (2 heures)
 Pour tout comprendre :
@@ -254,7 +241,7 @@ Pour les développeurs et scientifiques :
 
 ---
 
-## 📞 Vous Ne Trouvez Pas ?
+## Vous Ne Trouvez Pas ?
 
 ### Si vous cherchez...
 
@@ -262,7 +249,7 @@ Pour les développeurs et scientifiques :
 → README.md ou DEMARRAGE_RAPIDE.md
 
 **Utilisation basique**
-→ GUIDE_UTILISATION.md ou RESUME.md
+→ GUIDE_UTILISATION.md
 
 **Équations mathématiques**
 → DOCUMENTATION_MATHEMATIQUES.md
@@ -278,19 +265,19 @@ Pour les développeurs et scientifiques :
 
 ---
 
-## 🎯 Mots de la Fin
+## Mots de la Fin
 
-La documentation complète fait **~51 KB** et couvre :
-- ✅ Installation et utilisation
-- ✅ Toutes les équations mathématiques
-- ✅ Architecture complète du code
-- ✅ Scénarios et expériences
-- ✅ Résolution de problèmes
-- ✅ Références bibliographiques
+La documentation complète fait **~45 KB** et couvre :
+- Installation et utilisation
+- Toutes les équations mathématiques
+- Architecture complète du code
+- Scénarios et expériences
+- Résolution de problèmes
+- Références bibliographiques
 
-**Bon apprentissage ! 🚀**
+**Bon apprentissage !**
 
 ---
 
-*Index de la Documentation - Simulateur Balistique Multi-Projectiles*
+*Index de la Documentation - Simulateur de Trajectoires Multi-Projectiles*
 *Projet de Modélisation Mathématique - S5 - Janvier 2026*

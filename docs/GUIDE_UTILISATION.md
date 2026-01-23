@@ -1,40 +1,29 @@
 # Guide d'Utilisation - Contrôle Individuel des Projectiles
 
-## 🎯 Nouveautés
+## Nouveautés
 
 Le simulateur permet maintenant de **gérer chaque projectile indépendamment** ! Vous pouvez lancer, mettre en pause et réinitialiser chaque projectile séparément.
 
-## 📋 Panneau "Objet sélectionné"
+## Panneau "Objet sélectionné"
 
 Lorsque vous sélectionnez un projectile (en cliquant dessus), le panneau "Objet sélectionné" affiche :
 
-### Indicateur de Statut
-- **🔵 Prêt** : Le projectile n'a pas encore été lancé
-- **🟢 En vol** : Le projectile est en mouvement
-- **🟡 En pause** : Le projectile est en pause
-- **🔴 Terminé** : Le projectile a terminé sa trajectoire
+- **(Bleu)** : Le projectile n'a pas encore été lancé
+- **(Vert)** : Le projectile est en mouvement
+- **(Rouge)** : Le projectile a terminé sa trajectoire
 
 ### Boutons de Contrôle Individuel
 
-#### 🚀 Lancer
-- Lance uniquement le projectile sélectionné
-- Disponible uniquement si le projectile n'est pas déjà lancé ou s'il est en pause
-
-#### ⏸️ Pause
-- Met en pause ou reprend uniquement le projectile sélectionné
-- Le projectile reste visible mais ne bouge plus
-- Vous pouvez modifier les paramètres environnementaux pendant la pause
-
-#### 🔄 Réinit.
+#### Réinitialiser
 - Remet le projectile sélectionné à sa position initiale
 - Efface sa trajectoire
-- Le projectile revient à l'état "Prêt"
+- Le projectile revient à l'état initial
 
-#### ❌ Suppr.
+#### Supprimer
 - Supprime le projectile sélectionné de la simulation
 - Attention : cette action est irréversible !
 
-## 🎮 Scénarios d'Utilisation
+## Scénarios d'Utilisation
 
 ### Scénario 1 : Comparaison d'Angles
 
@@ -49,28 +38,27 @@ Lorsque vous sélectionnez un projectile (en cliquant dessus), le panneau "Objet
 4. Cliquez sur "Lancer" (panneau Environnement) pour lancer tous les projectiles simultanément
 5. Observez les différentes trajectoires !
 
-### Scénario 2 : Expérimentation Séquentielle
+### Scénario 2 : Itération Rapide
 
-**Objectif** : Tester différentes vitesses l'une après l'autre
+**Objectif** : Tester et ajuster un tir jusqu'à satisfaction
 
 1. Ajoutez un projectile
-2. Réglez une vitesse (ex: 50 m/s)
-3. Cliquez sur "Lancer" dans le panneau "Objet sélectionné"
-4. Observez la trajectoire complète
-5. Ajoutez un nouveau projectile
-6. Réglez une vitesse différente (ex: 100 m/s)
-7. Lancez-le individuellement
-8. Comparez les deux trajectoires côte à côte
+2. Réglez une vitesse et un angle
+3. Cliquez sur "Lancer" (Global)
+4. Observez la trajectoire
+5. Cliquez sur "Réinitialiser" dans le panneau "Objet sélectionné"
+6. Modifiez légèrement l'angle
+7. Relancez (Global) pour voir la différence
 
 ### Scénario 3 : Effet du Vent en Temps Réel
 
 **Objectif** : Voir l'effet d'un changement de vent pendant le vol
 
 1. Ajoutez un projectile et configurez-le
-2. Cliquez sur "Lancer" (individuel)
-3. Pendant le vol, cliquez sur "Pause" (individuel)
+2. Cliquez sur "Lancer" (Global)
+3. Pendant le vol, cliquez sur "Pause" (Global)
 4. Modifiez la direction ou la vitesse du vent
-5. Cliquez à nouveau sur "Pause" pour reprendre
+5. Cliquez à nouveau sur "Lancer" pour reprendre
 6. Le projectile continue avec les nouvelles conditions de vent !
 
 ### Scénario 4 : Raffinement Itératif
@@ -78,14 +66,14 @@ Lorsque vous sélectionnez un projectile (en cliquant dessus), le panneau "Objet
 **Objectif** : Ajuster les paramètres pour atteindre une cible
 
 1. Ajoutez un projectile
-2. Lancez-le individuellement
+2. Lancez-le (Global)
 3. Observez où il atterrit
-4. Cliquez sur "Réinit." (individuel)
+4. Cliquez sur "Réinitialiser" (Individuel)
 5. Ajustez les paramètres (angle, vitesse)
 6. Relancez-le
 7. Répétez jusqu'à atteindre votre objectif !
 
-## 🔄 Différences entre Contrôles Globaux et Individuels
+## Différences entre Contrôles Globaux et Individuels
 
 ### Contrôles Globaux (Panneau "Environnement")
 
@@ -99,12 +87,10 @@ Lorsque vous sélectionnez un projectile (en cliquant dessus), le panneau "Objet
 
 | Bouton | Action |
 |--------|--------|
-| **Lancer** | Lance uniquement le projectile SÉLECTIONNÉ |
-| **Pause** | Met en pause/reprend uniquement le projectile SÉLECTIONNÉ |
-| **Réinit.** | Remet uniquement le projectile SÉLECTIONNÉ à son état initial |
-| **Suppr.** | Supprime uniquement le projectile SÉLECTIONNÉ |
+| **Réinitialiser** | Remet uniquement le projectile SÉLECTIONNÉ à son état initial |
+| **Supprimer** | Supprime uniquement le projectile SÉLECTIONNÉ |
 
-## 💡 Astuces
+## Astuces
 
 ### Gestion Multiple
 - Vous pouvez avoir plusieurs projectiles en vol simultanément
@@ -128,7 +114,7 @@ Lorsque vous sélectionnez un projectile (en cliquant dessus), le panneau "Objet
   - Supprimer les projectiles terminés
   - Utiliser le bouton "Effacer" pour tout recommencer
 
-## 🎓 Expériences Suggérées
+## Expériences Suggérées
 
 ### Expérience 1 : Angle Optimal
 **Question** : Quel angle donne la portée maximale ?
@@ -152,7 +138,7 @@ Lorsque vous sélectionnez un projectile (en cliquant dessus), le panneau "Objet
 - Ajoutez du vent fort (ex: 20 m/s)
 - Les petits projectiles sont-ils plus affectés ?
 
-## 🐞 Cas Particuliers
+## Cas Particuliers
 
 ### Projectile Immobile
 Si un projectile ne bouge pas après avoir cliqué sur "Lancer" :
@@ -172,7 +158,7 @@ Si vous ne pouvez pas modifier certains paramètres :
 - **Masse et rayon** : Toujours modifiables
 - **Environnement** : Toujours modifiable
 
-## 📖 Pour Aller Plus Loin
+## Pour Aller Plus Loin
 
 Consultez `DOCUMENTATION_MATHEMATIQUES.md` pour :
 - Les équations complètes du modèle physique
@@ -182,4 +168,4 @@ Consultez `DOCUMENTATION_MATHEMATIQUES.md` pour :
 
 ---
 
-**Amusez-vous bien avec le simulateur ! 🚀**
+**Amusez-vous bien avec le simulateur !**

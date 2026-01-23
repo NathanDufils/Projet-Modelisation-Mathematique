@@ -1,4 +1,4 @@
-# Documentation Mathématique - Simulateur Balistique
+# Documentation Mathématique - Simulateur de Trajectoires Multi-Projectiles
 
 ## Table des Matières
 1. [Introduction](#introduction)
@@ -500,7 +500,7 @@ La fonction `update_physics_step` implémente :
 
 ### Système de Coordonnées
 
-⚠️ **Important** : Le système de coordonnées utilise la convention graphique où :
+**Important** : Le système de coordonnées utilise la convention graphique où :
 - x croît vers la droite (positif → Est)
 - y croît vers le bas (positif → Sud)
 

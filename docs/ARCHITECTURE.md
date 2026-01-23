@@ -1,6 +1,6 @@
-# Architecture du Simulateur Balistique
+# Architecture du Simulateur de Trajectoires Multi-Projectiles
 
-## 🏗️ Structure Globale
+## Structure Globale
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -33,10 +33,10 @@
 │                  │          │  • Slider, Button       │
 │ • Forces         │          │  • Compass              │
 │ • Intégration    │          └─────────────────────────┘
-└──────────────────┘
+36: └──────────────────┘
 ```
 
-## 📦 Composants Principaux
+## Composants Principaux
 
 ### 1. Projectile (Modèle de Données)
 
@@ -166,7 +166,7 @@ Physics
     └── calculate_flight_time()► Temps de vol
 ```
 
-## 🔄 Flux de Données
+## Flux de Données
 
 ### Lancement d'un Projectile Individuel (NOUVEAU)
 
@@ -284,7 +284,7 @@ Physics
        └─► UI désélectionne le projectile
 ```
 
-## 🎨 États d'un Projectile
+## États d'un Projectile
 
 ```
                    ┌─────────────┐
@@ -335,7 +335,7 @@ Physics
                    └─────────────┘
 ```
 
-## 📊 Hiérarchie des Contrôles
+## Hiérarchie des Contrôles
 
 ```
 Contrôles
@@ -353,7 +353,7 @@ Contrôles
     └── Suppr. ─────────────────► Supprime 1 projectile sélectionné
 ```
 
-## 🔍 Exemple de Scénario Multi-Projectiles
+## Exemple de Scénario Multi-Projectiles
 
 ```
 État Initial:
@@ -424,7 +424,7 @@ B: supprimé !
 C: toujours là (terminé)
 ```
 
-## 🧪 Tests de Validation
+## Tests de Validation
 
 ### Test 1: Lancement Individuel
 ```
@@ -475,5 +475,5 @@ C: toujours là (terminé)
 
 ---
 
-**Documentation Technique - Simulateur Balistique**
+**Documentation Technique - Simulateur de Trajectoires Multi-Projectiles**
 *Architecture et Flux de Données*

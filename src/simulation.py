@@ -8,7 +8,7 @@ class Simulation:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.display.set_caption("Simulateur Balistique Multi-Projectiles")
+        pygame.display.set_caption("Simulateur de trajectoire")
         self.clock = pygame.time.Clock()
         self.running = True
         self.paused = False

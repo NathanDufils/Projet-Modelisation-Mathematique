@@ -1,26 +1,26 @@
-# 🚀 Guide de Démarrage Rapide
+# Guide de Démarrage Rapide
 
 ## Installation & Lancement en 3 Étapes
 
-### 1️⃣ Installer les Dépendances
+### 1. Installer les Dépendances
 ```bash
 pip install pygame
 ```
 
-### 2️⃣ Lancer le Simulateur
+### 2. Lancer le Simulateur
 ```bash
 python main.py
 ```
 
-### 3️⃣ Créer Votre Premier Projectile
+### 3. Créer Votre Premier Projectile
 1. Cliquez sur **"Ajouter"** (panneau Environnement)
 2. Ajustez les paramètres avec les sliders
 3. Cliquez sur **"Lancer"** (panneau Environnement)
-4. Observez la trajectoire ! 🎯
+4. Observez la trajectoire !
 
 ---
 
-## ⚡ Actions Rapides
+## Actions Rapides
 
 ### Gestion Globale (Panneau "Environnement")
 - `Ajouter` : Crée un nouveau projectile
@@ -31,14 +31,12 @@ python main.py
 ### Gestion Individuelle (Panneau "Objet sélectionné")
 1. **Cliquez sur un projectile** pour le sélectionner
 2. Utilisez les boutons :
-   - `Lancer` 🟢 : Lance ce projectile
-   - `Pause` 🟡 : Pause/Reprend ce projectile
-   - `Réinit.` 🔵 : Reset ce projectile
-   - `Suppr.` 🔴 : Supprime ce projectile
+   - `Réinit.` (Bleu) : Reset ce projectile
+   - `Suppr.` (Rouge) : Supprime ce projectile
 
 ---
 
-## 🎯 Expériences Rapides
+## Expériences Rapides
 
 ### Test 1 : Trajectoire Simple (30 secondes)
 ```
@@ -77,11 +75,10 @@ python main.py
 
 ---
 
-## 📖 Documentation
+## Documentation
 
 | Fichier | Contenu |
 |---------|---------|
-| **RESUME.md** | Ce fichier - Vue d'ensemble |
 | **README.md** | Documentation complète du projet |
 | **GUIDE_UTILISATION.md** | Mode d'emploi détaillé avec scénarios |
 | **DOCUMENTATION_MATHEMATIQUES.md** | Toutes les équations et formules |
@@ -89,13 +86,13 @@ python main.py
 
 ---
 
-## 🎮 Raccourcis Clavier
+## Raccourcis Clavier
 
 *Actuellement, le simulateur utilise uniquement la souris*
 
 ---
 
-## ⚙️ Paramètres Recommandés
+## Paramètres Recommandés
 
 ### Pour une Trajectoire Visible
 - Vitesse : 50-150 m/s
@@ -116,7 +113,7 @@ python main.py
 
 ---
 
-## 🐛 Résolution Rapide
+## Résolution Rapide
 
 | Problème | Solution |
 |----------|----------|
@@ -127,18 +124,17 @@ python main.py
 
 ---
 
-## 💡 Conseil Pro
+## Conseil Pro
 
-**Utilisez la pause individuelle pour examiner un projectile en détail !**
-1. Lancez un projectile
-2. Cliquez "Pause" (individuel) pendant le vol
-3. Lisez position, vitesse, temps
-4. Modifiez environnement si besoin
-5. Reprenez !
+**Utilisez la pause globale pour examiner vos projectiles !**
+1. Lancez vos projectiles
+2. Cliquez "Lancer" (Global) pour mettre en pause
+3. Sélectionnez un projectile pour voir ses détails
+4. Cliquez "Lancer" (Global) pour reprendre
 
 ---
 
-## 🎓 Pour Aller Plus Loin
+## Pour Aller Plus Loin
 
 ### Comprendre les Maths
 → Lisez **DOCUMENTATION_MATHEMATIQUES.md**
@@ -160,6 +156,6 @@ python main.py
 
 ---
 
-**🚀 C'est parti ! Amusez-vous bien !**
+**C'est parti ! Amusez-vous bien !**
 
 *Projet de Modélisation Mathématique - S5*

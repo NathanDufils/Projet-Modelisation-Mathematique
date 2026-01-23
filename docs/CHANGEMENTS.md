@@ -1,23 +1,20 @@
-# Changements Apportés au Simulateur Balistique
+# Changements Apportés au Simulateur de Trajectoires Multi-Projectiles
 
-## 🎯 Objectifs Réalisés
+## Objectifs Réalisés
 
-### 1. Gestion Indépendante des Projectiles ✅
+### 1. Gestion Indépendante des Projectiles
 
 Chaque projectile peut maintenant être contrôlé individuellement avec :
 
 #### Nouveaux Boutons (Panneau "Objet sélectionné")
-- **Lancer** : Lance uniquement le projectile sélectionné
-- **Pause** : Met en pause/reprend uniquement le projectile sélectionné
-- **Réinit.** : Réinitialise uniquement le projectile sélectionné
-- **Suppr.** : Supprime uniquement le projectile sélectionné
+- **Réinitialiser** : Réinitialise uniquement le projectile sélectionné
+- **Supprimer** : Supprime uniquement le projectile sélectionné
 
 #### Améliorations de l'Interface
-- **Indicateur de statut** : Affiche l'état actuel du projectile (Prêt, En vol, En pause, Terminé)
-- **Codes couleur** : Bleu (Prêt), Vert (En vol), Jaune (Pause), Rouge (Terminé)
-- **Couleurs des boutons** : Vert pour lancer, Jaune pour pause, Bleu pour réinitialiser, Rouge pour supprimer
+- **Indicateur de statut** : Simplifié (affichage des infos détaillées en haut à gauche)
+- **Couleurs des boutons** : Bleu pour réinitialiser, Rouge pour supprimer
 
-### 2. Documentation Mathématique Complète ✅
+### 2. Documentation Mathématique Complète
 
 #### Nouveau fichier : `DOCUMENTATION_MATHEMATIQUES.md`
 
@@ -83,26 +80,24 @@ Documentation exhaustive de 400+ lignes incluant :
     - Détails sur le système de coordonnées
     - Convention d'angles
 
-## 📝 Fichiers Modifiés
+## Fichiers Modifiés
 
 ### `src/simulation.py`
 - **Ajout** : Gestion des actions individuelles (`launch_selected`, `pause_selected`, `reset_selected`, `delete_selected`)
 - **Modification** : `handle_ui_action()` pour traiter les nouvelles actions
 
 ### `src/ui.py`
-- **Ajout** : 4 nouveaux boutons dans `ObjectPanel`
-  - `launch_selected` (Vert clair)
-  - `pause_selected` (Jaune clair)
+- **Ajout** : 2 nouveaux boutons dans `ObjectPanel`
   - `reset_selected` (Bleu clair)
   - `delete_selected` (Rouge clair)
-- **Modification** : `ObjectPanel.draw()` pour afficher le statut du projectile avec code couleur
+- **Modification** : `ObjectPanel.draw()` pour afficher les infos du projectile sélectionné
 - **Modification** : `ObjectPanel.handle_event()` pour gérer les clics sur les nouveaux boutons
 - **Modification** : `UI.handle_event()` pour transmettre les actions individuelles
 
 ### `src/projectile.py`
 Aucune modification nécessaire - L'architecture existante supporte déjà la gestion indépendante !
 
-## 📚 Fichiers Créés
+## Fichiers Créés
 
 ### 1. `DOCUMENTATION_MATHEMATIQUES.md` (~ 15 KB)
 Documentation mathématique complète avec équations LaTeX
@@ -129,25 +124,22 @@ Guide pratique pour l'utilisateur avec :
 ### 4. `CHANGEMENTS.md` (ce fichier)
 Résumé des modifications apportées
 
-## 🎮 Nouvelles Fonctionnalités Utilisateur
+## Nouvelles Fonctionnalités Utilisateur
 
 ### Avant
-- ✅ Lancer tous les projectiles en même temps
-- ✅ Réinitialiser tous les projectiles
-- ✅ Effacer tous les projectiles
-- ❌ Contrôle individuel impossible
+- Lancer tous les projectiles en même temps
+- Réinitialiser tous les projectiles
+- Effacer tous les projectiles
+- Contrôle individuel limité (déplacement uniquement)
 
 ### Maintenant
-- ✅ Lancer tous les projectiles en même temps
-- ✅ **Lancer un projectile spécifique**
-- ✅ Réinitialiser tous les projectiles
-- ✅ **Réinitialiser un projectile spécifique**
-- ✅ Effacer tous les projectiles
-- ✅ **Supprimer un projectile spécifique**
-- ✅ **Mettre en pause un projectile spécifique**
-- ✅ **Affichage du statut de chaque projectile**
+- Lancer tous les projectiles en même temps
+- Réinitialiser tous les projectiles
+- **Réinitialiser un projectile spécifique**
+- Effacer tous les projectiles
+- **Supprimer un projectile spécifique**
 
-## 🔬 Cas d'Usage Maintenant Possibles
+## Cas d'Usage Maintenant Possibles
 
 ### Comparaison Visuelle
 Lancez plusieurs projectiles avec des paramètres différents pour comparer leurs trajectoires simultanément.
@@ -164,16 +156,16 @@ Testez un projectile, réinitialisez-le, ajustez les paramètres, et relancez sa
 ### Nettoyage Sélectif
 Supprimez les projectiles terminés ou non pertinents sans tout effacer.
 
-## 📊 Statistiques
+## Statistiques
 
 - **Lignes de code ajoutées** : ~ 150 lignes
 - **Documentation créée** : ~ 29 KB (3 nouveaux fichiers)
-- **Nouveaux boutons** : 4
-- **Nouvelles actions** : 4
+- **Nouveaux boutons** : 2
+- **Nouvelles actions** : 2
 - **Équations documentées** : 30+
 - **Références ajoutées** : 10+
 
-## ✨ Points Forts
+## Points Forts
 
 1. **Architecture Propre** : Les modifications s'intègrent naturellement dans le code existant
 2. **Réutilisabilité** : Utilisation des classes et méthodes existantes du projectile
@@ -181,22 +173,22 @@ Supprimez les projectiles terminés ou non pertinents sans tout effacer.
 4. **Guides Pratiques** : 3 niveaux de documentation (technique, utilisateur, tutoriels)
 5. **Interface Intuitive** : Couleurs et indicateurs visuels clairs
 
-## 🎓 Valeur Pédagogique
+## Valeur Pédagogique
 
 ### Documentation Mathématique
-- ✅ Équations complètes et dérivations
-- ✅ Explications physiques détaillées
-- ✅ Exemples numériques
-- ✅ Validation et tests
-- ✅ Références académiques
+- Équations complètes et dérivations
+- Explications physiques détaillées
+- Exemples numériques
+- Validation et tests
+- Références académiques
 
 ### Apprentissage Interactif
-- ✅ Expérimentation libre
-- ✅ Comparaison directe de scénarios
-- ✅ Feedback visuel immédiat
-- ✅ Contrôle précis des variables
+- Expérimentation libre
+- Comparaison directe de scénarios
+- Feedback visuel immédiat
+- Contrôle précis des variables
 
-## 🚀 Prochaines Étapes Possibles
+## Prochaines Étapes Possibles
 
 Si vous souhaitez aller plus loin, voici quelques suggestions :
 
@@ -222,7 +214,7 @@ Si vous souhaitez aller plus loin, voici quelques suggestions :
 
 ---
 
-## 📞 Support
+## Support
 
 Pour toute question ou problème :
 1. Consultez `README.md` pour les informations générales
